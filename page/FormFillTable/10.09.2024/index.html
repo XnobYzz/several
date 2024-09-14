@@ -1,0 +1,140 @@
+<!-- Author: XIE
+Description: create account, form sample -->
+
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Ký</title>
+    <script>
+        function h3U(y) {
+            return (y % 4 === 0 && y % 100 !== 0) || (y % 400 === 0);
+        }
+
+        function r9E() {
+            var month = document.getElementById("month").value;
+            var year = document.getElementById("year").value;
+            var daySelect = document.getElementById("day");
+            var daysInMonth = [31, (h3U(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+            daySelect.innerHTML = '';
+            for (var i = 1; i <= daysInMonth[month - 1]; i++) {
+                var opt = document.createElement("option");
+                opt.value = i;
+                opt.text = 'Ngày ' + i;
+                daySelect.appendChild(opt);
+            }
+        }
+
+        function vL8() {
+            var m = document.getElementById("month");
+            var y = document.getElementById("year");
+            var now = new Date();
+            var currentYear = now.getFullYear();
+            for (var i = 1; i <= 12; i++) {
+                var option = document.createElement("option");
+                option.value = i;
+                option.text = 'Tháng ' + i;
+                m.appendChild(option);
+            }
+
+            for (var i = currentYear - 13; i >= 1900; i--) {
+                var option = document.createElement("option");
+                option.value = i;
+                option.text = i;
+                y.appendChild(option);
+            }
+
+            r9E(); 
+        }
+
+        function LbZt() {
+            var birthYear = document.getElementById("year").value;
+            var currentYear = new Date().getFullYear();
+            if (currentYear - birthYear < 13) {
+                alert("Bạn phải trên 13 tuổi để đăng ký.");
+                return false;
+            }
+            return true;
+        }
+
+        function jg3F() {
+            r9E();
+        }
+
+        window.onload = function() {
+            vL8(); 
+        };
+    </script>
+</head>
+<body>
+    <div class="registration-form">
+        <form action="#" method="post" onsubmit="return LbZt();" enctype="multipart/form-data">
+            <table border="1" cellpadding="10" cellspacing="0" style="width: 100%; max-width: 600px; margin: auto;">
+                <tr>
+                    <td colspan="2" style="text-align: center;"><strong>ĐĂNG KÝ</strong></td>
+                </tr>
+                <tr>
+                    <td><label for="fullname">Full name:</label></td>
+                    <td><input type="text" id="fullname" name="fullname" placeholder="Nhập tên đầy đủ" required></td>
+                </tr>
+                <tr>
+                    <td><label for="username">Username:</label></td>
+                    <td><input type="text" id="username" name="username" placeholder="Nhập tên đăng nhập" required></td>
+                </tr>
+                <tr>
+                    <td><label for="password">Password:</label></td>
+                    <td><input type="password" id="password" name="password" placeholder="Nhập mật khẩu" required></td>
+                </tr>
+                <tr>
+                    <td><label for="repassword">Reenter Password:</label></td>
+                    <td><input type="password" id="repassword" name="repassword" placeholder="Nhập lại mật khẩu" required></td>
+                </tr>
+                <tr>
+                    <td>Giới tính:</td>
+                    <td>
+                        <input type="radio" id="male" name="gender" value="male">
+                        <label for="male">Nam</label>
+                        <input type="radio" id="female" name="gender" value="female">
+                        <label for="female">Nữ</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="birthdate">Ngày sinh:</label></td>
+                    <td>
+                        <select id="day" name="day"></select>
+                        <select id="month" name="month" onchange="jg3F();"></select>
+                        <select id="year" name="year" onchange="jg3F();"></select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="address">Address:</label></td>
+                    <td><textarea id="address" name="address" placeholder="Nhập địa chỉ"></textarea></td>
+                </tr>
+                <tr>
+                    <td>Avatar:</td>
+                    <td><input type="file" id="avatar" name="avatar"></td>
+                </tr>
+                <tr>
+                    <td>Sở Thích:</td>
+                    <td>
+                        <input type="checkbox" id="game" name="hobby" value="game">
+                        <label for="game">Chơi Game</label>
+                        <input type="checkbox" id="music" name="hobby" value="music">
+                        <label for="music">Nghe nhạc</label>
+                        <input type="checkbox" id="reading" name="hobby" value="reading">
+                        <label for="reading">Đọc sách</label>
+                        <input type="checkbox" id="sports" name="hobby" value="sports">
+                        <label for="sports">Thể thao</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align: center;">
+                        <button type="reset">Reset</button>
+                        <button type="submit">OK</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</body>
+</html>
