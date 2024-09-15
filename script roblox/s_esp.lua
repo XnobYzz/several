@@ -62,6 +62,18 @@ function createBox(p)
     end
 end
 
+function track()
+    while true do
+        for _, p in pairs(players:GetPlayers()) do
+            if p ~= game.Players.LocalPlayer then
+                createBox(p)  
+            end
+        end
+    end
+end
+
+spawn(track)
+
 players.PlayerAdded:Connect(function(player)
     print("New player joined: " .. player.Name)
     upstatus()
@@ -77,7 +89,7 @@ players.PlayerRemoving:Connect(function(player)
     upstatus()
 end)
 
-function onCharacterReset(player)
+function creset(player)
     player.CharacterAdded:Connect(function(character)
         print(player.Name .. " has reset their character.")
         createBox(player)  
@@ -85,19 +97,7 @@ function onCharacterReset(player)
 end
 
 for _, player in pairs(players:GetPlayers()) do
-    onCharacterReset(player)
+    creset(player)
 end
  
-players.PlayerAdded:Connect(onCharacterReset)
-
-function track()
-    while true do
-        for _, p in pairs(players:GetPlayers()) do
-            if p ~= game.Players.LocalPlayer then
-                createBox(p)  
-            end
-        end
-    end
-end
-
-spawn(track)
+players.PlayerAdded:Connect(creset)
