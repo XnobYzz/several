@@ -1,38 +1,24 @@
--- XIE, 
+-- XIE,
 
 local players = game:GetService("Players")
 local runService = game:GetService("RunService")
 
-function uss()  
-    while true do
-        wait(1)  
-        print("\nServer Status:")
-        print("Players: " .. #players:GetPlayers() .. "/" .. players.MaxPlayers)
+function updateServerStatus()
+    print("\nServer Status:")
+    print("Players: " .. #players:GetPlayers() .. "/" .. players.MaxPlayers)
 
-        for _, player in pairs(players:GetPlayers()) do
-            print("Username: " .. player.Name .. ", Display Name: " .. player.DisplayName)
-        end
+    for _, player in pairs(players:GetPlayers()) do
+        print("Username: " .. player.Name .. ", Display Name: " .. player.DisplayName)
     end
 end
 
-players.PlayerAdded:Connect(function(player)
-    print("New player joined: " .. player.Name)
-    player.CharacterAdded:Connect(function(character)
-        print(player.Name .. " has spawned their character.")
-    end)
-end)
-
-players.PlayerRemoving:Connect(function(player)
-    print("Player left the server: " .. player.Name)
-end)
-
-function bbox(p)  
+function createBox(p)
     if p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
         local hrp = p.Character.HumanoidRootPart
 
         local box = Instance.new("SelectionBox")
         box.Adornee = p.Character
-        box.Color3 = Color3.fromRGB(0, 255, 0)  -- Green aura
+        box.Color3 = Color3.fromRGB(0, 255, 0)  
         box.Parent = p.Character
 
         local distLabel = Instance.new("BillboardGui", hrp)
@@ -43,8 +29,8 @@ function bbox(p)
         local distText = Instance.new("TextLabel", distLabel)
         distText.Size = UDim2.new(1, 0, 1, 0)
         distText.BackgroundTransparency = 1
-        distText.TextColor3 = Color3.fromRGB(255, 255, 255)  -- White text
-        distText.Text = "Distance: " .. math.floor((p.Character.PrimaryPart.Position - game.Players.LocalPlayer.Character.PrimaryPart.Position).Magnitude)
+        distText.TextColor3 = Color3.fromRGB(255, 255, 255) 
+        distText.Text = "Distance: " .. math.floor((p.Character.PrimaryPart.Position - game.Players.LocalPlayer.Character.PrimaryPart.Position).Magnitude) .. " m"
 
         local nameLabel = Instance.new("BillboardGui", hrp)
         nameLabel.Size = UDim2.new(0, 200, 0, 50)
@@ -54,22 +40,49 @@ function bbox(p)
         local nameText = Instance.new("TextLabel", nameLabel)
         nameText.Size = UDim2.new(1, 0, 1, 0)
         nameText.BackgroundTransparency = 1
-        nameText.TextColor3 = Color3.fromRGB(0, 255, 0)  -- Green text
+        nameText.TextColor3 = Color3.fromRGB(0, 255, 0) 
         nameText.Text = p.Name
     end
 end
 
-function track()  
+players.PlayerAdded:Connect(function(player)
+    print("New player joined: " .. player.Name)
+    updateServerStatus()
+
+    player.CharacterAdded:Connect(function(character)
+        print(player.Name .. " has spawned their character.")
+        createBox(player) 
+    end)
+end)
+
+players.PlayerRemoving:Connect(function(player)
+    print("Player left the server: " .. player.Name)
+    updateServerStatus()
+end)
+
+function onCharacterReset(player)
+    player.CharacterAdded:Connect(function(character)
+        print(player.Name .. " has reset their character.")
+        createBox(player)  
+    end)
+end
+
+for _, player in pairs(players:GetPlayers()) do
+    onCharacterReset(player)
+end
+ 
+players.PlayerAdded:Connect(onCharacterReset)
+
+function track()
     while true do
         wait(1)
         for _, p in pairs(players:GetPlayers()) do
             if p ~= game.Players.LocalPlayer then
-                bbox(p)
+                createBox(p)  
             end
         end
     end
 end
 
--- start the functions in parallel
-spawn(uss)  -- update server status
-spawn(track)  -- track and display player info
+-- start the tracking function in parallel
+spawn(track)
