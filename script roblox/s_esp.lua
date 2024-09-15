@@ -1,5 +1,20 @@
 -- XIE,
 
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "TestGui"
+
+local textLabel = Instance.new("TextLabel")
+textLabel.Parent = screenGui
+textLabel.Size = UDim2.new(0, 300, 0, 100)  
+textLabel.Position = UDim2.new(0.5, -150, 0.5, -50)  
+textLabel.Text = "XIE TEST"  
+textLabel.TextColor3 = Color3.new(1, 1, 0)  
+textLabel.TextScaled = true  
+textLabel.Font = Enum.Font.SourceSansBold  
+textLabel.BackgroundTransparency = 1  
+
+screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
 local players = game:GetService("Players")
 local runService = game:GetService("RunService")
 
