@@ -1,4 +1,6 @@
--- XIE,
+-- name: esp player
+-- author: XIE 
+-- description: Displays the player's name and distance from the current player's character. The script also updates information when new players join, leave, or change characters.
 
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "TestGui"
@@ -18,7 +20,7 @@ screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 local players = game:GetService("Players")
 local runService = game:GetService("RunService")
 
-function updateServerStatus()
+function upstatus()
     print("\nServer Status:")
     print("Players: " .. #players:GetPlayers() .. "/" .. players.MaxPlayers)
 
@@ -62,7 +64,7 @@ end
 
 players.PlayerAdded:Connect(function(player)
     print("New player joined: " .. player.Name)
-    updateServerStatus()
+    upstatus()
 
     player.CharacterAdded:Connect(function(character)
         print(player.Name .. " has spawned their character.")
@@ -72,7 +74,7 @@ end)
 
 players.PlayerRemoving:Connect(function(player)
     print("Player left the server: " .. player.Name)
-    updateServerStatus()
+    upstatus()
 end)
 
 function onCharacterReset(player)
@@ -90,7 +92,6 @@ players.PlayerAdded:Connect(onCharacterReset)
 
 function track()
     while true do
-        wait(1)
         for _, p in pairs(players:GetPlayers()) do
             if p ~= game.Players.LocalPlayer then
                 createBox(p)  
@@ -99,5 +100,4 @@ function track()
     end
 end
 
--- start the tracking function in parallel
 spawn(track)
