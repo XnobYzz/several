@@ -2,20 +2,20 @@
 -- author: XIE 
 -- description: Displays the player's name and distance from the current player's character. The script also updates information when new players join, leave, or change characters.
 
--- local screenGui = Instance.new("ScreenGui")
--- screenGui.Name = "TestGui"
+local screenGui = Instance.new("ScreenGui", game.Players.LocalPlayer:WaitForChild("PlayerGui"))
+local textLabel = Instance.new("TextLabel", screenGui)
 
--- local textLabel = Instance.new("TextLabel")
--- textLabel.Parent = screenGui
--- textLabel.Size = UDim2.new(0, 300, 0, 100)  
--- textLabel.Position = UDim2.new(0.5, -150, 0.5, -50)  
--- textLabel.Text = "XIE TEST"  
--- textLabel.TextColor3 = Color3.new(1, 1, 0)  
--- textLabel.TextScaled = true  
--- textLabel.Font = Enum.Font.SourceSansBold  
--- textLabel.BackgroundTransparency = 1  
+textLabel.Size = UDim2.new(0, 300, 0, 100)  
+textLabel.Position = UDim2.new(0.5, -150, 0.5, -50)  
+textLabel.Text = "XIE TEST"  
+textLabel.TextColor3 = Color3.new(1, 0, 0)  
+textLabel.TextScaled = true  
+textLabel.Font = Enum.Font.SourceSansBold  
+textLabel.BackgroundTransparency = 1
 
--- screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+wait(5)
+screenGui:Destroy()
+
 
 local players = game:GetService("Players")
 local runService = game:GetService("RunService")
