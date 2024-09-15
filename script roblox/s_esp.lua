@@ -92,6 +92,7 @@ players.PlayerAdded:Connect(creset)
 
 function track()
     while true do
+        wait(1)
         for _, p in pairs(players:GetPlayers()) do
             if p ~= game.Players.LocalPlayer then
                 createBox(p)  
