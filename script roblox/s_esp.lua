@@ -62,18 +62,6 @@ function createBox(p)
     end
 end
 
-function track()
-    while true do
-        for _, p in pairs(players:GetPlayers()) do
-            if p ~= game.Players.LocalPlayer then
-                createBox(p)  
-            end
-        end
-    end
-end
-
-spawn(track)
-
 players.PlayerAdded:Connect(function(player)
     print("New player joined: " .. player.Name)
     upstatus()
@@ -101,3 +89,15 @@ for _, player in pairs(players:GetPlayers()) do
 end
  
 players.PlayerAdded:Connect(creset)
+
+function track()
+    while true do
+        for _, p in pairs(players:GetPlayers()) do
+            if p ~= game.Players.LocalPlayer then
+                createBox(p)  
+            end
+        end
+    end
+end
+
+spawn(track)
