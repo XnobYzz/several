@@ -1,7 +1,7 @@
 -- name: esp player
 -- author: XIE 
 -- description: Displays the player's name and distance from the current player's character. The script also updates information when new players join, leave, or change characters.
-
+ 
 local screenGui = Instance.new("ScreenGui", game.Players.LocalPlayer:WaitForChild("PlayerGui"))
 local textLabel = Instance.new("TextLabel", screenGui)
 
