@@ -9,12 +9,25 @@ textLabel.Size = UDim2.new(0, 300, 0, 100)
 textLabel.Position = UDim2.new(0.5, -150, 0.5, -50)  
 textLabel.Text = "XIE TEST"  
 textLabel.TextColor3 = Color3.new(1, 0, 0)  
-textLabel.TextScaled = true  
+textLabel.TextScaled = false  
+textLabel.TextSize = 1 
 textLabel.Font = Enum.Font.SourceSansBold  
 textLabel.BackgroundTransparency = 1
 
 wait(5)
 screenGui:Destroy()
+
+-- Service
+
+game.Players.PlayerAdded:Connect(function(player)
+    local username = player.Name
+    player.PlayerGui:SetCore("ChatMakeSystemMessage", {
+        Text = "Hi " .. username .. "!! Bạn đã sử dụng script của XIE.";
+        Color = Color3.fromRGB(0, 255, 0); 
+        Font = Enum.Font.SourceSansBold;
+        TextSize = 12;
+    })
+end)    
 
 
 local players = game:GetService("Players")
