@@ -19,15 +19,15 @@ screenGui:Destroy()
 
 -- Service
 
-game.Players.PlayerAdded:Connect(function(player)
-    local username = player.Name
-    player.PlayerGui:SetCore("ChatMakeSystemMessage", {
-        Text = "Hi " .. username .. "!! Bạn đã sử dụng script của XIE.";
-        Color = Color3.fromRGB(0, 255, 0); 
-        Font = Enum.Font.SourceSansBold;
-        TextSize = 12;
-    })
-end)    
+-- game.Players.PlayerAdded:Connect(function(player)
+--     local username = player.Name
+--     player.PlayerGui:SetCore("ChatMakeSystemMessage", {
+--         Text = "Hi " .. username .. "!! Bạn đã sử dụng script của XIE.";
+--         Color = Color3.fromRGB(0, 255, 0); 
+--         Font = Enum.Font.SourceSansBold;
+--         TextSize = 12;
+--     })
+-- end)    
 
 
 local players = game:GetService("Players")
