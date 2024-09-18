@@ -1,7 +1,3 @@
--- name: enhanced esp player with complete removal
--- author: XIE 
--- description: Adds GUI toggle with ESP on/off, removes boxes, lines, labels when turned off, and clean reset to default state.
-
 local p = game.Players.LocalPlayer
 local c = p.Character
 local h = c and c:FindFirstChildWhichIsA("Humanoid")
@@ -106,7 +102,12 @@ local function createESP(p)
         distText.Size = UDim2.new(1, 0, 1, 0)
         distText.BackgroundTransparency = 1
         distText.TextColor3 = Color3.fromRGB(255, 255, 255)
-        distText.Text = "Dist: " .. math.floor((p.Character.PrimaryPart.Position - game.Players.LocalPlayer.Character.PrimaryPart.Position).Magnitude) .. "m"
+
+        runService.RenderStepped:Connect(function()
+            if p.Character and p.Character.PrimaryPart then
+                distText.Text = "Dist: " .. math.floor((p.Character.PrimaryPart.Position - game.Players.LocalPlayer.Character.PrimaryPart.Position).Magnitude) .. "m"
+            end
+        end)
 
         local nameLabel = Instance.new("BillboardGui", hrp)
         nameLabel.Size = UDim2.new(0, 200, 0, 50)
@@ -117,7 +118,12 @@ local function createESP(p)
         nameText.Size = UDim2.new(1, 0, 1, 0)
         nameText.BackgroundTransparency = 1
         nameText.TextColor3 = Color3.fromRGB(0, 255, 0)
-        nameText.Text = p.Name
+
+        runService.RenderStepped:Connect(function()
+            if p and p.DisplayName and p.Name then
+                nameText.Text = p.Name .. " | " .. p.DisplayName
+            end
+        end)
 
         espObjects[p] = espObjects[p] or {}
         espObjects[p].box = box
@@ -167,4 +173,4 @@ for _, player in pairs(players:GetPlayers()) do
             createESP(player)
         end
     end
-end)
+end
