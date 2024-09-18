@@ -2,12 +2,14 @@
 -- author: XIE
 -- description: Enhanced ESP with UI controls, toggle functionality, and player line connectors.
 
-local p = game.Players.LocalPlayer
-local c = p.Character
-local h = c and c:FindFirstChildWhichIsA("Humanoid")
-local n = false
+local p = game:GetService("Players").LocalPlayer
+local c = p.Character or p.CharacterAdded:Wait()
+local h = c:FindFirstChildWhichIsA("Humanoid")
 local uiEnabled = true
 local espEnabled = false
+local trackLoop = nil
+local espObjects = {}
+local lines = {}
 
 game:GetService("StarterGui"):SetCore("SendNotification", {
     Title = "ENHANCED DEMO | 15.09.2024",
@@ -18,32 +20,48 @@ game:GetService("StarterGui"):SetCore("SendNotification", {
 local players = game:GetService("Players")
 local runService = game:GetService("RunService")
 local camera = game.Workspace.CurrentCamera
-local trackLoop = nil
-local lines = {}
-local espObjects = {}
 
--- Create GUI
 local ui = Instance.new("ScreenGui", game.CoreGui)
 local toggleBtn = Instance.new("TextButton", ui)
 local resetBtn = Instance.new("TextButton", ui)
 local hideBtn = Instance.new("TextButton", ui)
 
-toggleBtn.Size = UDim2.new(0, 100, 0, 50)
+toggleBtn.Size = UDim2.new(0, 120, 0, 40)
 toggleBtn.Position = UDim2.new(0, 10, 0, 10)
 toggleBtn.Text = "Toggle ESP"
+toggleBtn.TextSize = 14
+toggleBtn.Font = Enum.Font.GothamBold
 toggleBtn.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+toggleBtn.TextColor3 = Color3.new(1, 1, 1)
 
-resetBtn.Size = UDim2.new(0, 100, 0, 50)
-resetBtn.Position = UDim2.new(0, 120, 0, 10)
+resetBtn.Size = UDim2.new(0, 120, 0, 40)
+resetBtn.Position = UDim2.new(0, 140, 0, 10)
 resetBtn.Text = "Reset ESP"
+resetBtn.TextSize = 14
+resetBtn.Font = Enum.Font.GothamBold
 resetBtn.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+resetBtn.TextColor3 = Color3.new(1, 1, 1)
 
-hideBtn.Size = UDim2.new(0, 100, 0, 50)
-hideBtn.Position = UDim2.new(0, 230, 0, 10)
+hideBtn.Size = UDim2.new(0, 120, 0, 40)
+hideBtn.Position = UDim2.new(0, 270, 0, 10)
 hideBtn.Text = "Hide UI"
+hideBtn.TextSize = 14
+hideBtn.Font = Enum.Font.GothamBold
 hideBtn.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+hideBtn.TextColor3 = Color3.new(1, 1, 1)
 
 -- Functions
+local function clearESP()
+    for _, obj in pairs(espObjects) do
+        obj:Destroy()
+    end
+    for _, line in pairs(lines) do
+        line.Visible = false
+    end
+    espObjects = {}
+    lines = {}
+end
+
 local function upstatus()
     print("\nStatus:")
     print("P: " .. #players:GetPlayers() .. "/" .. players.MaxPlayers)
@@ -101,29 +119,16 @@ local function drawLine(p)
     line.To = camera:WorldToViewportPoint(p.Character.HumanoidRootPart.Position)
 end
 
-local function clearESP()
-    for _, obj in pairs(espObjects) do
-        for _, v in pairs(obj) do
-            v:Destroy()
-        end
-    end
-    for _, line in pairs(lines) do
-        line.Visible = false
-    end
-    espObjects = {}
-end
-
 local function resetESP()
     clearESP()
     espEnabled = false
 end
 
--- Toggle ESP
 toggleBtn.MouseButton1Click:Connect(function()
     espEnabled = not espEnabled
     if espEnabled then
         if trackLoop == nil then
-            trackLoop = game:GetService("RunService").RenderStepped:Connect(function()
+            trackLoop = runService.RenderStepped:Connect(function()
                 for _, player in pairs(players:GetPlayers()) do
                     if player ~= p then
                         createBox(player)
@@ -137,18 +142,15 @@ toggleBtn.MouseButton1Click:Connect(function()
     end
 end)
 
--- Reset ESP
 resetBtn.MouseButton1Click:Connect(function()
     resetESP()
 end)
 
--- Hide/Show UI
 hideBtn.MouseButton1Click:Connect(function()
     uiEnabled = not uiEnabled
     ui.Enabled = uiEnabled
 end)
 
--- Player connection logic
 players.PlayerAdded:Connect(function(player)
     print("New player: " .. player.Name)
     upstatus()
