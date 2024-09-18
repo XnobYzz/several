@@ -1,6 +1,6 @@
--- name: enhanced esp player
+-- name: enhanced esp player with complete removal
 -- author: XIE 
--- description: Adds GUI toggle with ESP on/off, lines from camera to players, and clean reset to default state.
+-- description: Adds GUI toggle with ESP on/off, removes boxes, lines, labels when turned off, and clean reset to default state.
 
 local p = game.Players.LocalPlayer
 local c = p.Character
@@ -13,7 +13,13 @@ local hideButton = Instance.new("TextButton", gui)
 local showButton = Instance.new("TextButton", gui)
 local runService = game:GetService("RunService")
 local players = game:GetService("Players")
-local espLines = {}
+local espObjects = {}
+
+game:GetService("StarterGui"):SetCore("SendNotification", {
+    Title = "ENHANCED DEMO | 15.09.2024",
+    Text = "By XIE",
+    Icon = "rbxthumb://type=Asset&id=139089428167914&w=150&h=150"
+})
 
 gui.Name = "ESP_GUI"
 buttonsFrame.Size = UDim2.new(0, 300, 0, 150)
@@ -50,19 +56,13 @@ resetButton.Size = UDim2.new(0, 120, 0, 30)
 resetButton.Position = UDim2.new(0, 160, 0, 50)
 
 local function clearESP()
-    for _, line in pairs(espLines) do
-        line:Remove()
+    for _, espData in pairs(espObjects) do
+        if espData.box then espData.box:Destroy() end
+        if espData.distLabel then espData.distLabel:Destroy() end
+        if espData.nameLabel then espData.nameLabel:Destroy() end
+        if espData.line then espData.line:Remove() end
     end
-    espLines = {}
-    for _, player in pairs(players:GetPlayers()) do
-        if player.Character then
-            for _, obj in pairs(player.Character:GetChildren()) do
-                if obj:IsA("SelectionBox") or obj:IsA("BillboardGui") then
-                    obj:Destroy()
-                end
-            end
-        end
-    end
+    espObjects = {}
 end
 
 local function createLine(p)
@@ -71,7 +71,9 @@ local function createLine(p)
         local line = Drawing.new("Line")
         line.Thickness = 1
         line.Color = Color3.fromRGB(255, 0, 0)
-        table.insert(espLines, line)
+
+        espObjects[p] = espObjects[p] or {}
+        espObjects[p].line = line
 
         runService.RenderStepped:Connect(function()
             if espOn and hrp and p.Character then
@@ -117,6 +119,11 @@ local function createESP(p)
         nameText.TextColor3 = Color3.fromRGB(0, 255, 0)
         nameText.Text = p.Name
 
+        espObjects[p] = espObjects[p] or {}
+        espObjects[p].box = box
+        espObjects[p].distLabel = distLabel
+        espObjects[p].nameLabel = nameLabel
+
         createLine(p)
     end
 end
@@ -126,6 +133,12 @@ onOffButton.MouseButton1Click:Connect(function()
     onOffButton.Text = espOn and "ESP: ON" or "ESP: OFF"
     if not espOn then
         clearESP()
+    else
+        for _, player in pairs(players:GetPlayers()) do
+            if player ~= p and player.Character then
+                createESP(player)
+            end
+        end
     end
 end)
 
@@ -154,4 +167,4 @@ for _, player in pairs(players:GetPlayers()) do
             createESP(player)
         end
     end
-end
+end)
