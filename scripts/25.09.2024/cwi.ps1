@@ -8,7 +8,7 @@ function Set-DNS {
     Write-Host "Setting IPv4 DNS..." -ForegroundColor Yellow
     Set-DnsClientServerAddress -InterfaceAlias $adapter -ServerAddresses $IPv4DNS
     Write-Host "Setting IPv6 DNS..." -ForegroundColor Yellow
-    Set-DnsClientServerAddress -InterfaceAlias $adapter -ServerAddresses $IPv6DNS -AddressFamily IPv6
+    Set-DnsClientServerAddress -InterfaceAlias $adapter -ServerAddresses $IPv6DNS
     Write-Host "DNS settings updated successfully!" -ForegroundColor Green
 }
 
